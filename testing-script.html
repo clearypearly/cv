@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тестер API для Make.com интеграции</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        h2 {
+            color: #34495e;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .tab {
+            padding: 12px 24px;
+            background: #ecf0f1;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .tab.active {
+            background: #3498db;
+            color: white;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: #2c3e50;
+        }
+        
+        input, textarea, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #bdc3c7;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        
+        textarea {
+            height: 120px;
+            font-family: 'Courier New', monospace;
+        }
+        
+        button {
+            background: #27ae60;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            transition: background 0.3s;
+        }
+        
+        button:hover {
+            background: #219a52;
+        }
+        
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+        }
+        
+        .result.success {
+            background: #d5f4e6;
+            border: 1px solid #27ae60;
+            color: #27ae60;
+        }
+        
+        .result.error {
+            background: #fdf2f2;
+            border: 1px solid #e74c3c;
+            color: #e74c3c;
+        }
+        
+        .example-configs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .config-card {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 4px solid #3498db;
+        }
+        
+        .config-card h3 {
+            margin-top: 0;
+            color: #2c3e50;
+        }
+        
+        .config-card pre {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+            font-size: 12px;
+        }
+        
+        .error-guide {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 6px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        
+        .error-guide h3 {
+            color: #856404;
+            margin-top: 0;
+        }
+        
+        .checklist {
+            background: #e8f5e8;
+            border-radius: 6px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .checklist ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .checklist li {
+            padding: 5px 0;
+            position: relative;
+            padding-left: 25px;
+        }
+        
+        .checklist li:before {
+            content: "☐";
+            position: absolute;
+            left: 0;
+            color: #27ae60;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🚀 Тестер API для Make.com интеграции</h1>
+    
+    <div class="container">
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('gupshup-test')">Тест Gupshup API</button>
+            <button class="tab" onclick="showTab('chatwoot-test')">Тест Chatwoot API</button>
+            <button class="tab" onclick="showTab('examples')">Примеры конфигураций</button>
+            <button class="tab" onclick="showTab('troubleshooting')">Устранение проблем</button>
+        </div>
+        
+        <!-- Gupshup Test Tab -->
+        <div id="gupshup-test" class="tab-content active">
+            <h2>🔵 Тестирование Gupshup API</h2>
+            <form id="gupshup-form">
+                <div class="form-group">
+                    <label for="gupshup-api-key">API Key Gupshup:</label>
+                    <input type="text" id="gupshup-api-key" placeholder="Ваш API ключ Gupshup" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="gupshup-source">Номер источника:</label>
+                    <input type="tel" id="gupshup-source" placeholder="919876543210" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="gupshup-destination">Номер получателя:</label>
+                    <input type="tel" id="gupshup-destination" placeholder="919876543211" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="gupshup-message">Сообщение:</label>
+                    <textarea id="gupshup-message" placeholder="Введите ваше сообщение" required>Тестовое сообщение из API тестера</textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="gupshup-app-name">Имя приложения:</label>
+                    <input type="text" id="gupshup-app-name" value="TestApp" required>
+                </div>
+                
+                <button type="submit">📤 Отправить тестовое сообщение</button>
+            </form>
+            
+            <div id="gupshup-result"></div>
+        </div>
+        
+        <!-- Chatwoot Test Tab -->
+        <div id="chatwoot-test" class="tab-content">
+            <h2>🟢 Тестирование Chatwoot API</h2>
+            <form id="chatwoot-form">
+                <div class="form-group">
+                    <label for="chatwoot-domain">Домен Chatwoot:</label>
+                    <input type="url" id="chatwoot-domain" placeholder="https://your-domain.chatwoot.com" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="chatwoot-token">Access Token:</label>
+                    <input type="text" id="chatwoot-token" placeholder="Ваш access token" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="chatwoot-account-id">Account ID:</label>
+                    <input type="number" id="chatwoot-account-id" placeholder="1" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="chatwoot-conversation-id">Conversation ID:</label>
+                    <input type="number" id="chatwoot-conversation-id" placeholder="123" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="chatwoot-message">Сообщение:</label>
+                    <textarea id="chatwoot-message" placeholder="Введите ваше сообщение" required>Тестовое сообщение из API тестера</textarea>
+                </div>
+                
+                <button type="submit">📤 Отправить в Chatwoot</button>
+            </form>
+            
+            <div id="chatwoot-result"></div>
+        </div>
+        
+        <!-- Examples Tab -->
+        <div id="examples" class="tab-content">
+            <h2>📋 Примеры правильных конфигураций</h2>
+            
+            <div class="example-configs">
+                <div class="config-card">
+                    <h3>🔵 Gupshup HTTP модуль</h3>
+                    <p><strong>URL:</strong> https://api.gupshup.io/sm/api/v1/msg</p>
+                    <p><strong>Method:</strong> POST</p>
+                    <p><strong>Headers:</strong></p>
+                    <pre>Content-Type: application/x-www-form-urlencoded
+apikey: ВАШ_API_КЛЮЧ</pre>
+                    <p><strong>Body Type:</strong> application/x-www-form-urlencoded</p>
+                    <p><strong>Fields:</strong></p>
+                    <pre>channel: whatsapp
+source: {{номер_источника}}
+destination: {{номер_получателя}}
+message: {"type":"text","text":"{{текст}}"}
+src.name: ИмяПриложения</pre>
+                </div>
+                
+                <div class="config-card">
+                    <h3>🟢 Chatwoot HTTP модуль</h3>
+                    <p><strong>URL:</strong> https://домен/api/v1/accounts/{{account_id}}/conversations/{{conversation_id}}/messages</p>
+                    <p><strong>Method:</strong> POST</p>
+                    <p><strong>Headers:</strong></p>
+                    <pre>Content-Type: application/json
+api_access_token: ВАШ_ТОКЕН</pre>
+                    <p><strong>Body Type:</strong> application/json</p>
+                    <p><strong>JSON Body:</strong></p>
+                    <pre>{
+  "content": "{{текст_сообщения}}",
+  "message_type": "outgoing",
+  "private": false
+}</pre>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Troubleshooting Tab -->
+        <div id="troubleshooting" class="tab-content">
+            <h2>🔧 Устранение проблем</h2>
+            
+            <div class="error-guide">
+                <h3>❌ Ошибка 415 "Unsupported Media Type"</h3>
+                <p><strong>Причина:</strong> Неправильный Content-Type заголовок</p>
+                <p><strong>Решение:</strong></p>
+                <ul>
+                    <li>Для Gupshup: используйте <code>application/x-www-form-urlencoded</code></li>
+                    <li>Для Chatwoot: используйте <code>application/json</code></li>
+                    <li>Проверьте точное написание заголовков</li>
+                </ul>
+            </div>
+            
+            <div class="error-guide">
+                <h3>❌ Ошибка 400 "Bad Request"</h3>
+                <p><strong>Причины:</strong></p>
+                <ul>
+                    <li>Отсутствуют обязательные поля</li>
+                    <li>Неправильный формат номера телефона</li>
+                    <li>Некорректный JSON синтаксис</li>
+                    <li>Специальные символы в тексте</li>
+                </ul>
+                <p><strong>Решения:</strong></p>
+                <ul>
+                    <li>Формат номера: <code>919876543210</code> (без +, пробелов, дефисов)</li>
+                    <li>Экранируйте кавычки в JSON: <code>\"</code></li>
+                    <li>Удалите переносы строк из текста</li>
+                </ul>
+            </div>
+            
+            <div class="checklist">
+                <h3>✅ Чек-лист проверки</h3>
+                <ul>
+                    <li>Content-Type заголовок правильный для каждого API</li>
+                    <li>Все обязательные поля присутствуют</li>
+                    <li>Формат номеров телефонов корректен</li>
+                    <li>API ключи и токены действительны</li>
+                    <li>JSON синтаксически правильный</li>
+                    <li>Удалены проблемные символы из текста</li>
+                    <li>Настроена обработка ошибок в Make.com</li>
+                    <li>Включено детальное логирование</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function showTab(tabId) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Remove active class from all tabs
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected tab content
+            document.getElementById(tabId).classList.add('active');
+            
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+        }
+        
+        // Gupshup form handler
+        document.getElementById('gupshup-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const apiKey = document.getElementById('gupshup-api-key').value;
+            const source = document.getElementById('gupshup-source').value;
+            const destination = document.getElementById('gupshup-destination').value;
+            const message = document.getElementById('gupshup-message').value;
+            const appName = document.getElementById('gupshup-app-name').value;
+            
+            const resultDiv = document.getElementById('gupshup-result');
+            resultDiv.innerHTML = '<p>🔄 Отправка запроса...</p>';
+            resultDiv.className = 'result';
+            
+            // Create form data
+            const formData = new FormData();
+            formData.append('channel', 'whatsapp');
+            formData.append('source', source);
+            formData.append('destination', destination);
+            formData.append('message', JSON.stringify({"type":"text","text":message}));
+            formData.append('src.name', appName);
+            
+            fetch('https://api.gupshup.io/sm/api/v1/msg', {
+                method: 'POST',
+                headers: {
+                    'apikey': apiKey
+                },
+                body: formData
+            })
+            .then(response => {
+                return response.text().then(text => {
+                    return {
+                        status: response.status,
+                        statusText: response.statusText,
+                        body: text
+                    };
+                });
+            })
+            .then(data => {
+                if (data.status >= 200 && data.status < 300) {
+                    resultDiv.className = 'result success';
+                    resultDiv.innerHTML = `✅ Успешно отправлено!\n\nСтатус: ${data.status}\nОтвет: ${data.body}`;
+                } else {
+                    resultDiv.className = 'result error';
+                    resultDiv.innerHTML = `❌ Ошибка ${data.status}: ${data.statusText}\n\nОтвет: ${data.body}`;
+                }
+            })
+            .catch(error => {
+                resultDiv.className = 'result error';
+                resultDiv.innerHTML = `❌ Ошибка соединения: ${error.message}\n\nВозможные причины:\n- CORS блокировка (нормально для браузера)\n- Неверный API ключ\n- Проблемы с сетью\n\nИспользуйте это для проверки формата данных и скопируйте настройки в Make.com`;
+            });
+        });
+        
+        // Chatwoot form handler  
+        document.getElementById('chatwoot-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const domain = document.getElementById('chatwoot-domain').value;
+            const token = document.getElementById('chatwoot-token').value;
+            const accountId = document.getElementById('chatwoot-account-id').value;
+            const conversationId = document.getElementById('chatwoot-conversation-id').value;
+            const message = document.getElementById('chatwoot-message').value;
+            
+            const resultDiv = document.getElementById('chatwoot-result');
+            resultDiv.innerHTML = '<p>🔄 Отправка запроса...</p>';
+            resultDiv.className = 'result';
+            
+            const url = `${domain}/api/v1/accounts/${accountId}/conversations/${conversationId}/messages`;
+            
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'api_access_token': token
+                },
+                body: JSON.stringify({
+                    content: message,
+                    message_type: 'outgoing',
+                    private: false
+                })
+            })
+            .then(response => {
+                return response.text().then(text => {
+                    return {
+                        status: response.status,
+                        statusText: response.statusText,
+                        body: text
+                    };
+                });
+            })
+            .then(data => {
+                if (data.status >= 200 && data.status < 300) {
+                    resultDiv.className = 'result success';
+                    resultDiv.innerHTML = `✅ Успешно отправлено!\n\nСтатус: ${data.status}\nОтвет: ${data.body}`;
+                } else {
+                    resultDiv.className = 'result error';
+                    resultDiv.innerHTML = `❌ Ошибка ${data.status}: ${data.statusText}\n\nОтвет: ${data.body}`;
+                }
+            })
+            .catch(error => {
+                resultDiv.className = 'result error';
+                resultDiv.innerHTML = `❌ Ошибка соединения: ${error.message}\n\nВозможные причины:\n- CORS блокировка (нормально для браузера)\n- Неверный токен\n- Неверные ID\n- Проблемы с сетью\n\nИспользуйте это для проверки формата данных и скопируйте настройки в Make.com`;
+            });
+        });
+    </script>
+</body>
+</html>

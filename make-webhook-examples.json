@@ -1,0 +1,205 @@
+{
+  "gupshup_send_message_correct": {
+    "description": "Правильный формат для отправки сообщения через Gupshup API",
+    "method": "POST",
+    "url": "https://api.gupshup.io/sm/api/v1/msg",
+    "headers": {
+      "Content-Type": "application/x-www-form-urlencoded",
+      "apikey": "YOUR_GUPSHUP_API_KEY"
+    },
+    "body_form_data": {
+      "channel": "whatsapp",
+      "source": "919876543210",
+      "destination": "919876543211",
+      "message": "{\"type\":\"text\",\"text\":\"Привет! Это тестовое сообщение.\"}",
+      "src.name": "YourAppName"
+    }
+  },
+  
+  "gupshup_send_message_json": {
+    "description": "Альтернативный JSON формат для Gupshup",
+    "method": "POST", 
+    "url": "https://api.gupshup.io/sm/api/v1/msg",
+    "headers": {
+      "Content-Type": "application/json",
+      "apikey": "YOUR_GUPSHUP_API_KEY"
+    },
+    "body": {
+      "channel": "whatsapp",
+      "source": "919876543210",
+      "destination": "919876543211",
+      "message": {
+        "type": "text",
+        "text": "Привет! Это тестовое сообщение."
+      },
+      "src.name": "YourAppName"
+    }
+  },
+
+  "chatwoot_send_message": {
+    "description": "Отправка сообщения в Chatwoot",
+    "method": "POST",
+    "url": "https://your-chatwoot-domain.com/api/v1/accounts/1/conversations/123/messages",
+    "headers": {
+      "Content-Type": "application/json",
+      "api_access_token": "YOUR_CHATWOOT_ACCESS_TOKEN"
+    },
+    "body": {
+      "content": "Ответ от бота через Make.com",
+      "message_type": "outgoing",
+      "private": false
+    }
+  },
+
+  "chatwoot_webhook_payload": {
+    "description": "Пример данных, которые Chatwoot отправляет на webhook",
+    "event": "message_created",
+    "data": {
+      "account": {
+        "id": 1,
+        "name": "Your Account"
+      },
+      "conversation": {
+        "id": 123,
+        "inbox_id": 456,
+        "status": "open"
+      },
+      "message": {
+        "id": 789,
+        "content": "Пользователь написал это сообщение",
+        "message_type": "incoming",
+        "created_at": "2024-01-15T10:30:00.000Z",
+        "sender": {
+          "id": 1,
+          "name": "John Doe",
+          "phone_number": "+1234567890",
+          "email": "john@example.com"
+        }
+      }
+    }
+  },
+
+  "gupshup_webhook_payload": {
+    "description": "Пример данных, которые Gupshup отправляет на webhook",
+    "type": "message",
+    "payload": {
+      "id": "gBGGJ0xReAaYVoGJ",
+      "source": "919876543210", 
+      "type": "text",
+      "payload": {
+        "text": "Сообщение от пользователя"
+      },
+      "sender": {
+        "phone": "919876543211",
+        "name": "User Name"
+      },
+      "timestamp": 1642247400
+    }
+  },
+
+  "make_http_module_settings_gupshup": {
+    "description": "Настройки HTTP модуля в Make.com для Gupshup",
+    "settings": {
+      "url": "https://api.gupshup.io/sm/api/v1/msg",
+      "method": "POST",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/x-www-form-urlencoded"
+        },
+        {
+          "name": "apikey", 
+          "value": "{{YOUR_API_KEY_VARIABLE}}"
+        }
+      ],
+      "body_type": "application/x-www-form-urlencoded",
+      "fields": [
+        {
+          "name": "channel",
+          "value": "whatsapp"
+        },
+        {
+          "name": "source",
+          "value": "{{source_number}}"
+        },
+        {
+          "name": "destination", 
+          "value": "{{destination_number}}"
+        },
+        {
+          "name": "message",
+          "value": "{\"type\":\"text\",\"text\":\"{{message_text}}\"}"
+        },
+        {
+          "name": "src.name",
+          "value": "YourAppName"
+        }
+      ]
+    }
+  },
+
+  "make_http_module_settings_chatwoot": {
+    "description": "Настройки HTTP модуля в Make.com для Chatwoot",
+    "settings": {
+      "url": "https://{{chatwoot_domain}}/api/v1/accounts/{{account_id}}/conversations/{{conversation_id}}/messages",
+      "method": "POST", 
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "api_access_token",
+          "value": "{{YOUR_CHATWOOT_TOKEN}}"
+        }
+      ],
+      "body_type": "application/json",
+      "body": {
+        "content": "{{message_content}}",
+        "message_type": "outgoing", 
+        "private": false
+      }
+    }
+  },
+
+  "common_errors_and_fixes": {
+    "error_415": {
+      "description": "HTTP 415 Unsupported Media Type",
+      "causes": [
+        "Неправильный Content-Type заголовок",
+        "Использование application/json для Gupshup вместо application/x-www-form-urlencoded"
+      ],
+      "solutions": [
+        "Для Gupshup: используйте 'application/x-www-form-urlencoded'",
+        "Для Chatwoot: используйте 'application/json'",
+        "Проверьте точное написание заголовков"
+      ]
+    },
+    "error_400": {
+      "description": "HTTP 400 Bad Request", 
+      "causes": [
+        "Отсутствуют обязательные поля",
+        "Неправильный формат номера телефона",
+        "Некорректный JSON синтаксис",
+        "Специальные символы в тексте"
+      ],
+      "solutions": [
+        "Проверьте все обязательные поля: channel, source, destination, message",
+        "Формат номера: '919876543210' (код страны + номер без +)",
+        "Экранируйте кавычки в JSON: \\\"",
+        "Удалите переносы строк и специальные символы"
+      ]
+    }
+  },
+
+  "testing_scenarios": {
+    "test_gupshup_api": {
+      "description": "Тест Gupshup API через curl",
+      "command": "curl -X POST 'https://api.gupshup.io/sm/api/v1/msg' -H 'Content-Type: application/x-www-form-urlencoded' -H 'apikey: YOUR_API_KEY' -d 'channel=whatsapp&source=919876543210&destination=919876543211&message={\"type\":\"text\",\"text\":\"Test message\"}&src.name=TestApp'"
+    },
+    "test_chatwoot_api": {
+      "description": "Тест Chatwoot API через curl",
+      "command": "curl -X POST 'https://your-domain.com/api/v1/accounts/1/conversations/123/messages' -H 'Content-Type: application/json' -H 'api_access_token: YOUR_TOKEN' -d '{\"content\":\"Test message\",\"message_type\":\"outgoing\",\"private\":false}'"
+    }
+  }
+}
